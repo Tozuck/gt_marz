@@ -1,33 +1,20 @@
 #!/bin/bash
-# GT_marz: A script to set up Marzban node
 
-# Update and install necessary packages
 apt-get update
-apt-get upgrade -y
+
 apt-get install curl socat git -y
 
-# Pause for 2 seconds
-sleep 2
-
-# Disable UFW
 ufw disable
 
-# Install Docker
 curl -fsSL https://get.docker.com | sh
 
-# Pause for 2 seconds
-sleep 2
 
-# Clone the Marzban-node repository
 git clone https://github.com/Gozargah/Marzban-node
 
-# Create directory for Marzban-node
+
 mkdir /var/lib/marzban-node
 
-# Pause for 2 seconds
-sleep 2
 
-# Edit the docker-compose.yml file
 cat <<EOL > ~/Marzban-node/docker-compose.yml
 services:
   marzban-node:
@@ -73,9 +60,5 @@ ectTkX/PsJboW2dQ88fb4sFgCoWmJe/bTUHNptGsxEM=
 -----END CERTIFICATE-----
 EOL
 
-# Pause for 3 seconds
-sleep 3
-
-# Run Docker Compose to start Marzban node
 cd ~/Marzban-node
 docker compose up -d
