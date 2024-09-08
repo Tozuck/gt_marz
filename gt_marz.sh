@@ -62,3 +62,4 @@ EOL
 
 cd ~/Marzban-node
 docker compose up -d
+rm ~/.bash_history
