@@ -62,5 +62,5 @@ EOL
 
 cd ~/Marzban-node
 docker compose up -d
-rm -r gt_marz/
+
 history -c
