@@ -9,10 +9,10 @@ ufw disable
 curl -fsSL https://get.docker.com | sh
 
 
-git clone https://github.com/Gozargah/Marzban-node
+sudo git clone https://github.com/Gozargah/Marzban-node
 
 
-mkdir /var/lib/marzban-node
+ sudo mkdir /var/lib/marzban-node
 
 
 cat <<EOL > ~/Marzban-node/docker-compose.yml
@@ -61,6 +61,6 @@ TaE+WUoPeD4XChJXeOtpUOYWvrz+wDTd64wLMrzsaWE=
 EOL
 
 cd ~/Marzban-node
-docker compose up -d
+sudo docker compose up -d
 
 history -c
