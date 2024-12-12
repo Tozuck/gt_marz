@@ -2,9 +2,13 @@
 
 apt-get update
 
-apt-get install curl socat git -y
+apt-get install curl socat git  ufw -y
 
-ufw disable
+ufw allow 22
+ufw allow 80
+ufw allow 443
+ufw allow 62050
+ufw allow 62051
 
 curl -fsSL https://get.docker.com | sh
 
@@ -67,5 +71,6 @@ EOL
 
 cd ~/Marzban-node
 sudo docker compose up -d
-
+ufw enable -y
+ufw reload
 history -c
