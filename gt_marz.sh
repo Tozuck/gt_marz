@@ -34,7 +34,7 @@ ufw allow 62051
 ufw deny in proto icmp
 
 iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
-netfilter-persistent save
+
 
 # Install Docker
 echo_info "Installing Docker..."
