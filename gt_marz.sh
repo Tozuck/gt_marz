@@ -1,47 +1,80 @@
 #!/bin/bash
 
+set -e  # Exit on any error
+
+# Function to log and print messages
+echo_info() {
+  echo -e "\033[1;32m[INFO]\033[0m $1"
+}
+echo_error() {
+  echo -e "\033[1;31m[ERROR]\033[0m $1"
+  exit 1
+}
+
+# Check for root privileges
+if [ "$EUID" -ne 0 ]; then
+  echo_error "This script must be run as root. Use sudo."
+fi
+
+# Update system packages
+echo_info "Updating package lists..."
 apt-get update
 
-apt-get install curl socat git  ufw -y
+# Install required packages
+echo_info "Installing required packages..."
+apt-get install -y curl socat git ufw iptables-persistent || echo_error "Failed to install packages."
 
-ufw allow 22
-ufw allow 80
-ufw allow 443
+# Configure UFW (firewall)
+echo_info "Configuring UFW..."
+ufw allow 22  # SSH
+ufw allow 80  # HTTP
+ufw allow 443 # HTTPS
 ufw allow 62050
 ufw allow 62051
-sudo ufw deny in proto icmp
-sudo iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
-sudo apt install iptables-persistent
-sudo netfilter-persistent save
-curl -fsSL https://get.docker.com | sh
+ufw deny in proto icmp
 
+iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
+netfilter-persistent save
 
-sudo git clone https://github.com/Gozargah/Marzban-node
+# Install Docker
+echo_info "Installing Docker..."
+if ! command -v docker &> /dev/null; then
+  curl -fsSL https://get.docker.com | sh || echo_error "Docker installation failed."
+else
+  echo_info "Docker is already installed."
+fi
 
+# Clone Marzban Node repository
+echo_info "Cloning Marzban Node repository..."
+if [ ! -d "~/Marzban-node" ]; then
+  git clone https://github.com/Gozargah/Marzban-node ~/Marzban-node || echo_error "Failed to clone Marzban Node repository."
+else
+  echo_info "Marzban Node repository already exists."
+fi
 
- sudo mkdir /var/lib/marzban-node
+# Create necessary directories
+echo_info "Creating necessary directories..."
+mkdir -p /var/lib/marzban-node
 
-
+# Generate Docker Compose configuration
+echo_info "Creating Docker Compose configuration..."
 cat <<EOL > ~/Marzban-node/docker-compose.yml
 services:
   marzban-node:
-    # build: .
     image: gozargah/marzban-node:latest
     restart: always
     network_mode: host
-
-    # env_file: .env
     environment:
       SSL_CERT_FILE: "/var/lib/marzban-node/ssl_cert.pem"
       SSL_KEY_FILE: "/var/lib/marzban-node/ssl_key.pem"
       SSL_CLIENT_CERT_FILE: "/var/lib/marzban-node/ssl_client_cert.pem"
       SERVICE_PROTOCOL: "rest"
-
     volumes:
       - /var/lib/marzban-node:/var/lib/marzban-node
 EOL
 
-# Create SSL certificate file
+# Generate placeholder SSL certificate
+echo_info "Creating placeholder SSL certificate..."
 cat <<EOL > /var/lib/marzban-node/ssl_client_cert.pem
 -----BEGIN CERTIFICATE-----
 MIIEnDCCAoQCAQAwDQYJKoZIhvcNAQENBQAwEzERMA8GA1UEAwwIR296YXJnYWgw
@@ -72,8 +105,18 @@ B+igjMPYdj7QLkFVVWQpWEq3RuUc8usdY4kzmJjOQA4=
 -----END CERTIFICATE-----
 EOL
 
+# Start the Marzban Node service
+echo_info "Starting Marzban Node service..."
 cd ~/Marzban-node
-sudo docker compose up -d
-ufw enable -y
+docker compose up -d || echo_error "Failed to start Marzban Node service."
+
+# Enable and reload UFW
+echo_info "Finalizing UFW setup..."
+ufw --force enable
 ufw reload
+
+# Clear shell history for security
+echo_info "Clearing shell history..."
 history -c
+
+echo_info "Setup complete. Marzban Node is now running."
