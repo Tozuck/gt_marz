@@ -31,9 +31,7 @@ ufw allow 80  # HTTP
 ufw allow 443 # HTTPS
 ufw allow 62050
 ufw allow 62051
-ufw deny in proto icmp
 
-iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
 
 
 # Install Docker
