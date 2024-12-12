@@ -9,7 +9,10 @@ ufw allow 80
 ufw allow 443
 ufw allow 62050
 ufw allow 62051
-
+sudo ufw deny in proto icmp
+sudo iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
+sudo apt install iptables-persistent
+sudo netfilter-persistent save
 curl -fsSL https://get.docker.com | sh
 
 
