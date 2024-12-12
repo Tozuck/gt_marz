@@ -22,7 +22,7 @@ apt-get update
 
 # Install required packages
 echo_info "Installing required packages..."
-apt-get install -y curl socat git ufw iptables-persistent || echo_error "Failed to install packages."
+apt-get install -y curl socat git ufw || echo_error "Failed to install packages."
 
 # Configure UFW (firewall)
 echo_info "Configuring UFW..."
