@@ -32,8 +32,6 @@ ufw allow 443 # HTTPS
 ufw allow 62050
 ufw allow 62051
 
-
-
 # Install Docker
 echo_info "Installing Docker..."
 if ! command -v docker &> /dev/null; then
@@ -117,4 +115,7 @@ ufw reload
 echo_info "Clearing shell history..."
 history -c
 
-echo_info "Setup complete. Marzban Node is now running."
+# Sleep for 3 seconds before closing the connection
+echo_info "Setup complete. Marzban Node is now running. Closing connection in 3 seconds..."
+sleep 3
+exit 0
