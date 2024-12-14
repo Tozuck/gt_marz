@@ -118,5 +118,4 @@ history -c
 # Sleep for 3 seconds before closing the connection
 echo_info "Setup complete. Marzban Node is now running. Closing connection in 3 seconds..."
 touch /tmp/gt_marz_installed_complete
-sleep 3
-exit 0
+
