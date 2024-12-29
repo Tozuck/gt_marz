@@ -29,6 +29,7 @@ echo_info "Configuring UFW..."
 ufw allow 22  # SSH
 ufw allow 80  # HTTP
 ufw allow 443 # HTTPS
+ufw allow 2053
 ufw allow 62050
 ufw allow 62051
 
