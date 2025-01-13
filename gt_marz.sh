@@ -23,6 +23,8 @@ apt-get update
 # Install required packages
 echo_info "Installing required packages..."
 apt-get install -y curl socat git ufw || echo_error "Failed to install packages."
+apt install nload -y
+apt install iftop -y
 
 # Configure UFW (firewall)
 echo_info "Configuring UFW..."
